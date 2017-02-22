@@ -1,0 +1,22 @@
+[alias]
+  co = checkout
+  ci = commit
+  st = status --short --branch -u
+  br = branch
+  glog = log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
+  please = push --force-with-lease
+  cian = commit --amend --no-edit
+  lumberjack = "!f(){\
+    git branch | grep -v "master" | grep -v ^* | xargs git branch -D;\
+  }; f"
+[core]
+  excludesfile = ~/.gitignore_global
+  editor = vim
+  pager = diff-so-fancy | less --tabs=4 -RFX
+[user]
+  name = name
+  email = email
+[push]
+  default = current
+[rerere]
+  enabled = true
