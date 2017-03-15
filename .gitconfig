@@ -20,3 +20,5 @@
   default = current
 [rerere]
   enabled = true
+[commit]
+  gpgsign = true
