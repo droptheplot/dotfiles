@@ -3,7 +3,9 @@ let mapleader="\<Space>"
 set nocompatible " be iMproved
 filetype off
 
-let g:ctrlsf_ackprg='ack'
+let g:ctrlsf_ackprg = 'ack'
+let g:ctrlsf_default_view_mode = 'compact'
+let g:ctrlsf_ignore_dir = ['bower_components', 'node_modules', 'log', 'tmp']
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -19,6 +21,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'chriskempson/base16-vim'
 Plugin 'bling/vim-airline'
 
+Plugin 'terryma/vim-multiple-cursors'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'scrooloose/syntastic'
 Plugin 'Yggdroot/indentLine'
@@ -60,6 +63,7 @@ set shiftwidth=2
 set splitbelow
 set splitright
 set ttyfast " Scroll faster
+set lazyredraw
 
 if has("gui_macvim")
   noremap <C-Tab> :tabnext<CR>
@@ -141,8 +145,10 @@ nnoremap <Leader>m /def<CR><bar>z.
 nnoremap <Leader>d :t.<CR>
 vnoremap <Leader>d :t'><CR>
 
-" Select word under cursor
-nnoremap <D-d> viw
+" Go to beginning/end of line
+nnoremap <Leader>e $
+nnoremap <Leader>b ^
+vnoremap <Leader>e $h
 
 " Puts binding.pry
 nnoremap <Leader>pry obinding.pry<ESC>
@@ -158,3 +164,6 @@ inoremap <C-j> <Esc>:m .+1<CR>==gi
 inoremap <C-k> <Esc>:m .-2<CR>==gi
 vnoremap <C-k> :m '<-2<CR>gv=gv
 vnoremap <C-j> :m '>+1<CR>gv=gv
+
+" Show current file in NERDTree
+nnoremap <Leader>n :NERDTreeFind<CR>
