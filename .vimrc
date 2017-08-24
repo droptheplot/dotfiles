@@ -1,11 +1,13 @@
 let mapleader="\<Space>"
+let timeoutlen=2000
 
 set nocompatible " be iMproved
-filetype off
+filetype on
 
 let g:ctrlsf_ackprg = 'ack'
-let g:ctrlsf_default_view_mode = 'compact'
-let g:ctrlsf_ignore_dir = ['bower_components', 'node_modules', 'log', 'tmp']
+let g:ctrlsf_default_view_mode = 'normal'
+let g:ctrlsf_ignore_dir = ['bower_components', 'node_modules', 'log', 'tmp', 'coverage', '.git', 'deps']
+let g:ctrlsf_position = 'bottom'
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -19,11 +21,14 @@ Plugin 'jistr/vim-nerdtree-tabs'
 
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'chriskempson/base16-vim'
+Plugin 'dracula/vim'
 Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'aliou/sql-heredoc.vim'
 
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'scrooloose/syntastic'
+Plugin 'w0rp/ale'
 Plugin 'Yggdroot/indentLine'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'kshenoy/vim-signature'
@@ -31,29 +36,51 @@ Plugin 'rizzatti/dash.vim'
 
 Plugin 'kien/ctrlp.vim'
 Plugin 'dyng/ctrlsf.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-rhubarb'
+Plugin 'haya14busa/incsearch.vim'
 
 Plugin 'tpope/vim-endwise'
 Plugin 'thoughtbot/vim-rspec'
 Plugin 't9md/vim-ruby-xmpfilter'
 
+Plugin 'elzr/vim-json'
+Plugin 'vim-ruby/vim-ruby'
 Plugin 'slim-template/vim-slim.git'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'elixir-lang/vim-elixir'
-Plugin 'elzr/vim-json'
+Plugin 'slashmili/alchemist.vim'
+Plugin 'fatih/vim-go'
+Plugin 'tomlion/vim-solidity'
+Plugin 'craigemery/vim-autotag'
 
 call vundle#end()
 filetype plugin indent on
 
-autocmd BufNew * if winnr('$') == 1 | tabmove99 | endif
-autocmd BufWritePre * StripWhitespace
+augroup vimrc_autocmd
+  autocmd!
+  autocmd BufNew * if winnr('$') == 1 | tabmove99 | endif
+  autocmd BufWritePre * StripWhitespace
+  autocmd BufNewFile,BufRead *.html.eex set syntax=html
+  autocmd BufNewFile,BufRead *.html.slim set syntax=slim
+  autocmd BufNewFile,BufRead *.coffee set syntax=coffee
+  autocmd BufNewFile,BufRead *.ex,*.exs set filetype=elixir
+  autocmd BufNewFile,BufRead *.sol set filetype=solidity
+augroup END
+
+runtime macros/matchit.vim
 
 " Styles
+
+let g:indentLine_enabled = 1
+let g:indentLine_color_gui = '#44475a'
 let base16colorspace=256
-colorscheme base16-default-dark
+colorscheme base16-dracula
+let g:airline_theme='dracula'
 set guioptions-=T
 set guioptions-=r
 set guioptions-=L
-set guifont=Monaco:h13
+set guifont=Meslo_LG_S_for_Powerline:h13
 set colorcolumn=80
 set number " Always show line number
 set clipboard=unnamedplus
@@ -64,6 +91,11 @@ set splitbelow
 set splitright
 set ttyfast " Scroll faster
 set lazyredraw
+set completeopt+=menuone,preview
+set omnifunc=syntaxcomplete#Complete
+set ignorecase
+set hlsearch
+hi Search guibg=#64666d guifg=NONE
 
 if has("gui_macvim")
   noremap <C-Tab> :tabnext<CR>
@@ -80,6 +112,10 @@ if has("gui_macvim")
   noremap <D-9> :tabn 9<CR>
   noremap <D-0> :tablast<CR>
 endif
+
+let g:ale_completion_enabled = 1
+let g:ale_sign_error = '>'
+let g:ale_sign_warning = '-'
 
 " NERDTree
 autocmd VimEnter * NERDTree
@@ -111,13 +147,7 @@ map <Leader>ra :call RunAllSpecs()<CR>
 
 let g:rspec_runner = "os_x_iterm2"
 
-" Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_check_on_wq = 0
-let g:syntastic_ruby_checkers = ['rubocop']
+let g:go_fmt_command = "goimports"
 
 " CtrlSF
 nmap <Leader>sf <Plug>CtrlSFPrompt
@@ -130,13 +160,21 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.log,*/node_modules/*,*/deps/*
 map <F4> <Plug>(xmpfilter-mark)
 map <F5> <Plug>(xmpfilter-run)
 
-" Place text under cursor to search
-nnoremap <Leader>ss /<C-r><C-w><CR>
-vnoremap <Leader>ss /<C-r><C-w><CR>
-
 " Place text under cursor to search and replace
 nnoremap <Leader>sr :.,$s/<C-r><C-w>/
 vnoremap <Leader>sr :.,$s/<C-r><C-w>/
+
+map / <Plug>(incsearch-forward)
+map ? <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+
+let g:incsearch#auto_nohlsearch = 1
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
 
 " Move to next `def` method
 nnoremap <Leader>m /def<CR><bar>z.
@@ -149,6 +187,7 @@ vnoremap <Leader>d :t'><CR>
 nnoremap <Leader>e $
 nnoremap <Leader>b ^
 vnoremap <Leader>e $h
+vnoremap <Leader>b ^
 
 " Puts binding.pry
 nnoremap <Leader>pry obinding.pry<ESC>
@@ -167,3 +206,8 @@ vnoremap <C-j> :m '>+1<CR>gv=gv
 
 " Show current file in NERDTree
 nnoremap <Leader>n :NERDTreeFind<CR>
+
+nnoremap <S-k> Hz.
+nnoremap <S-j> Lz.
+
+nnoremap <esc> :noh<return><esc>
