@@ -1,5 +1,5 @@
 let mapleader="\<Space>"
-let timeoutlen=2000
+let timeoutlen=3000
 
 set nocompatible " be iMproved
 filetype on
@@ -41,7 +41,7 @@ Plugin 'tpope/vim-rhubarb'
 Plugin 'haya14busa/incsearch.vim'
 
 Plugin 'tpope/vim-endwise'
-Plugin 'thoughtbot/vim-rspec'
+Plugin 'janko-m/vim-test'
 Plugin 't9md/vim-ruby-xmpfilter'
 
 Plugin 'elzr/vim-json'
@@ -52,7 +52,8 @@ Plugin 'elixir-lang/vim-elixir'
 Plugin 'slashmili/alchemist.vim'
 Plugin 'fatih/vim-go'
 Plugin 'tomlion/vim-solidity'
-Plugin 'craigemery/vim-autotag'
+Plugin 'ludovicchabant/vim-gutentags'
+Plugin 'suan/vim-instant-markdown'
 
 call vundle#end()
 filetype plugin indent on
@@ -111,19 +112,25 @@ if has("gui_macvim")
   noremap <D-8> :tabn 8<CR>
   noremap <D-9> :tabn 9<CR>
   noremap <D-0> :tablast<CR>
+
+  " Copy current buffer path to clipboard
+  nnoremap <leader>cf :let @+ = expand("%:p")<CR>
 endif
 
 let g:ale_completion_enabled = 1
 let g:ale_sign_error = '>'
 let g:ale_sign_warning = '-'
+let g:ale_linters = {
+    \ "ruby": ["rubocop", "ruby"]
+    \ }
 
 " NERDTree
-autocmd VimEnter * NERDTree
+autocmd VimEnter * NERDTree ~/Projects
 autocmd TabEnter * NERDTreeMirror
 autocmd VimEnter * wincmd p
 autocmd TabEnter * wincmd p
 let NERDTreeShowHidden=1
-let NERDTreeIgnore = ['.DS_Store']
+let NERDTreeIgnore = ['.DS_Store', '\.swo$', '\.swp$', '\.rdb$', 'tags']
 let g:NERDSpaceDelims = 1
 let g:nerdtree_tabs_open_on_console_startup=0
 
@@ -139,13 +146,12 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Unknown": "?"
     \ }
 
-" RSpec.vim mappings
-map <Leader>rc :call RunCurrentSpecFile()<CR>
-map <Leader>rn :call RunNearestSpec()<CR>
-map <Leader>rl :call RunLastSpec()<CR>
-map <Leader>ra :call RunAllSpecs()<CR>
+" vim-test mappings
+nmap <leader>tn :TestNearest<CR>
+nmap <leader>tc :TestFile<CR>
+nmap <leader>ta :TestSuite<CR>
 
-let g:rspec_runner = "os_x_iterm2"
+let test#strategy = "iterm"
 
 let g:go_fmt_command = "goimports"
 
@@ -190,7 +196,7 @@ vnoremap <Leader>e $h
 vnoremap <Leader>b ^
 
 " Puts binding.pry
-nnoremap <Leader>pry obinding.pry<ESC>
+nnoremap <Leader>pry Obinding.pry<ESC>
 
 " Search word under cursor in Dash
 nnoremap <Leader>g :Dash!<CR>
