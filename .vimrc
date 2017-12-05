@@ -6,7 +6,7 @@ filetype on
 
 let g:ctrlsf_ackprg = 'ack'
 let g:ctrlsf_default_view_mode = 'normal'
-let g:ctrlsf_ignore_dir = ['bower_components', 'node_modules', 'log', 'tmp', 'coverage', '.git', 'deps']
+let g:ctrlsf_ignore_dir = ['bower_components', 'node_modules', 'log', 'tmp', 'coverage', '.git', 'deps', 'public/assets']
 let g:ctrlsf_position = 'bottom'
 
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -17,14 +17,11 @@ Plugin 'L9'
 
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'jistr/vim-nerdtree-tabs'
 
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'chriskempson/base16-vim'
-Plugin 'dracula/vim'
+Plugin 'joshdick/onedark.vim'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'aliou/sql-heredoc.vim'
 
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'airblade/vim-gitgutter'
@@ -33,6 +30,7 @@ Plugin 'Yggdroot/indentLine'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'kshenoy/vim-signature'
 Plugin 'rizzatti/dash.vim'
+Plugin 'easymotion/vim-easymotion'
 
 Plugin 'kien/ctrlp.vim'
 Plugin 'dyng/ctrlsf.vim'
@@ -44,6 +42,7 @@ Plugin 'tpope/vim-endwise'
 Plugin 'janko-m/vim-test'
 Plugin 't9md/vim-ruby-xmpfilter'
 
+Plugin 'aliou/sql-heredoc.vim'
 Plugin 'elzr/vim-json'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'slim-template/vim-slim.git'
@@ -51,15 +50,20 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'elixir-lang/vim-elixir'
 Plugin 'slashmili/alchemist.vim'
 Plugin 'fatih/vim-go'
-Plugin 'tomlion/vim-solidity'
 Plugin 'ludovicchabant/vim-gutentags'
-Plugin 'suan/vim-instant-markdown'
+Plugin 'alvan/vim-closetag'
 
 call vundle#end()
 filetype plugin indent on
 
 augroup vimrc_autocmd
   autocmd!
+
+  if has("gui_macvim")
+    autocmd VimEnter * NERDTree ~/Projects
+    autocmd VimEnter * wincmd p
+  endif
+
   autocmd BufNew * if winnr('$') == 1 | tabmove99 | endif
   autocmd BufWritePre * StripWhitespace
   autocmd BufNewFile,BufRead *.html.eex set syntax=html
@@ -67,17 +71,23 @@ augroup vimrc_autocmd
   autocmd BufNewFile,BufRead *.coffee set syntax=coffee
   autocmd BufNewFile,BufRead *.ex,*.exs set filetype=elixir
   autocmd BufNewFile,BufRead *.sol set filetype=solidity
+
+  autocmd VimEnter * GoPath ~/Projects/Go
 augroup END
 
 runtime macros/matchit.vim
 
 " Styles
 
+if (has("termguicolors"))
+  set termguicolors
+endif
+
+colorscheme onedark
+let g:airline_theme='onedark'
 let g:indentLine_enabled = 1
 let g:indentLine_color_gui = '#44475a'
-let base16colorspace=256
-colorscheme base16-dracula
-let g:airline_theme='dracula'
+syntax on
 set guioptions-=T
 set guioptions-=r
 set guioptions-=L
@@ -96,11 +106,11 @@ set completeopt+=menuone,preview
 set omnifunc=syntaxcomplete#Complete
 set ignorecase
 set hlsearch
-hi Search guibg=#64666d guifg=NONE
+hi directory ctermfg=lightblue
 
 if has("gui_macvim")
-  noremap <C-Tab> :tabnext<CR>
   noremap <C-S-Tab> :tabprev<CR>
+  noremap <C-Tab> :tabnext<CR>
 
   noremap <D-1> :tabn 1<CR>
   noremap <D-2> :tabn 2<CR>
@@ -114,21 +124,23 @@ if has("gui_macvim")
   noremap <D-0> :tablast<CR>
 
   " Copy current buffer path to clipboard
-  nnoremap <leader>cf :let @+ = expand("%:p")<CR>
+  nnoremap <leader>cp :let @+ = expand("%:p")<CR>
 endif
 
-let g:ale_completion_enabled = 1
+let g:ale_completion_enabled = 0
+let g:ale_lint_on_save = 0
+let g:ale_lint_on_enter = 1
+let g:ale_lint_on_insert_leave = 1
 let g:ale_sign_error = '>'
 let g:ale_sign_warning = '-'
+let g:airline#extensions#ale#enabled = 0
+let g:ale_set_highlights = 0
 let g:ale_linters = {
-    \ "ruby": ["rubocop", "ruby"]
+    \ "ruby": ["rubocop", "ruby"],
+    \ "go": ["golint"]
     \ }
 
 " NERDTree
-autocmd VimEnter * NERDTree ~/Projects
-autocmd TabEnter * NERDTreeMirror
-autocmd VimEnter * wincmd p
-autocmd TabEnter * wincmd p
 let NERDTreeShowHidden=1
 let NERDTreeIgnore = ['.DS_Store', '\.swo$', '\.swp$', '\.rdb$', 'tags']
 let g:NERDSpaceDelims = 1
@@ -150,6 +162,7 @@ let g:NERDTreeIndicatorMapCustom = {
 nmap <leader>tn :TestNearest<CR>
 nmap <leader>tc :TestFile<CR>
 nmap <leader>ta :TestSuite<CR>
+nmap <leader>tl :TestLast<CR>
 
 let test#strategy = "iterm"
 
@@ -160,6 +173,12 @@ nmap <Leader>sf <Plug>CtrlSFPrompt
 vmap <Leader>sf <Plug>CtrlSFVwordPath
 nnoremap <Leader>st :CtrlSFToggle<CR>
 
+" EasyMotion
+map <Leader> <Plug>(easymotion-prefix)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
+nmap <Leader>l <Plug>(easymotion-overwin-line)
+
 " CtrlP ignored dirs and extensions
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.log,*/node_modules/*,*/deps/*
 
@@ -169,10 +188,6 @@ map <F5> <Plug>(xmpfilter-run)
 " Place text under cursor to search and replace
 nnoremap <Leader>sr :.,$s/<C-r><C-w>/
 vnoremap <Leader>sr :.,$s/<C-r><C-w>/
-
-map / <Plug>(incsearch-forward)
-map ? <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
 
 let g:incsearch#auto_nohlsearch = 1
 map n  <Plug>(incsearch-nohl-n)
@@ -217,3 +232,13 @@ nnoremap <S-k> Hz.
 nnoremap <S-j> Lz.
 
 nnoremap <esc> :noh<return><esc>
+
+" Don't copy with d, D, c, C
+nnoremap d "_d
+vnoremap d "_d
+nnoremap D "_D
+vnoremap D "_D
+nnoremap c "_c
+vnoremap c "_c
+nnoremap C "_C
+vnoremap C "_C
