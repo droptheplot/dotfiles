@@ -25,8 +25,7 @@ Plugin 'vim-airline/vim-airline-themes'
 
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'w0rp/ale'
-Plugin 'Yggdroot/indentLine'
+Plugin 'Yggdroot/indentline'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'kshenoy/vim-signature'
 Plugin 'rizzatti/dash.vim'
@@ -52,6 +51,16 @@ Plugin 'slashmili/alchemist.vim'
 Plugin 'fatih/vim-go'
 Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'alvan/vim-closetag'
+Plugin 'tpope/vim-abolish'
+Plugin 'buoto/gotests-vim'
+Plugin 'tpope/vim-fireplace'
+Plugin 'tpope/vim-classpath'
+Plugin 'AndrewRadev/splitjoin.vim'
+
+if has('nvim')
+  Plugin 'jodosha/vim-godebug'
+  Plugin 'sebdah/vim-delve'
+endif
 
 call vundle#end()
 filetype plugin indent on
@@ -59,25 +68,20 @@ filetype plugin indent on
 augroup vimrc_autocmd
   autocmd!
 
-  if has("gui_macvim")
-    autocmd VimEnter * NERDTree ~/Projects
-    autocmd VimEnter * wincmd p
-  endif
-
-  autocmd BufNew * if winnr('$') == 1 | tabmove99 | endif
+  " autocmd BufNew * if winnr('$') == 1 | tabmove99 | endif
   autocmd BufWritePre * StripWhitespace
   autocmd BufNewFile,BufRead *.html.eex set syntax=html
   autocmd BufNewFile,BufRead *.html.slim set syntax=slim
   autocmd BufNewFile,BufRead *.coffee set syntax=coffee
   autocmd BufNewFile,BufRead *.ex,*.exs set filetype=elixir
   autocmd BufNewFile,BufRead *.sol set filetype=solidity
+  autocmd BufNewFile,BufRead *.tmpl set filetype=gohtmltmpl
+  autocmd BufNewFile,BufRead *.yal set filetype=go
 
   autocmd VimEnter * GoPath ~/Projects/Go
 augroup END
 
 runtime macros/matchit.vim
-
-" Styles
 
 if (has("termguicolors"))
   set termguicolors
@@ -85,28 +89,32 @@ endif
 
 colorscheme onedark
 let g:airline_theme='onedark'
-let g:indentLine_enabled = 1
-let g:indentLine_color_gui = '#44475a'
 syntax on
-set guioptions-=T
-set guioptions-=r
-set guioptions-=L
-set guifont=Meslo_LG_S_for_Powerline:h13
 set colorcolumn=80
 set number " Always show line number
 set clipboard=unnamedplus
-set expandtab " Converting tabs to spaces
 set tabstop=2
+set softtabstop=2
 set shiftwidth=2
+set expandtab " Converting tabs to spaces
+set autoindent
+set copyindent
 set splitbelow
 set splitright
 set ttyfast " Scroll faster
 set lazyredraw
-set completeopt+=menuone,preview
-set omnifunc=syntaxcomplete#Complete
-set ignorecase
+set completeopt+=menuone
+set completeopt-=preview
 set hlsearch
+set mouse=a
+set conceallevel=0
+set ignorecase
+set smartcase
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.log,*/node_modules/*,*/deps/*
 hi directory ctermfg=lightblue
+
+" Russian
+set langmap=ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\"ZXCVBNM<>
 
 if has("gui_macvim")
   noremap <C-S-Tab> :tabprev<CR>
@@ -134,17 +142,28 @@ let g:ale_lint_on_insert_leave = 1
 let g:ale_sign_error = '>'
 let g:ale_sign_warning = '-'
 let g:airline#extensions#ale#enabled = 0
-let g:ale_set_highlights = 0
-let g:ale_linters = {
-    \ "ruby": ["rubocop", "ruby"],
-    \ "go": ["golint"]
-    \ }
 
 " NERDTree
-let NERDTreeShowHidden=1
+let NERDTreeShowHidden = 1
 let NERDTreeIgnore = ['.DS_Store', '\.swo$', '\.swp$', '\.rdb$', 'tags']
+let NERDTreeAutoDeleteBuffer = 1
 let g:NERDSpaceDelims = 1
 let g:nerdtree_tabs_open_on_console_startup=0
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+
+function! LeaderNERDTree()
+  if exists("t:NERDTreeBufName") && bufname("") == t:NERDTreeBufName
+    execute "NERDTreeToggle"
+    echo "0"
+  else
+    execute "NERDTreeFind"
+    echo "1"
+  endif
+endfunction
+
+" Show current file in NERDTree
+nnoremap <Leader>n :call LeaderNERDTree()<CR>
 
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified": "M",
@@ -166,7 +185,20 @@ nmap <leader>tl :TestLast<CR>
 
 let test#strategy = "iterm"
 
+" vim-go
 let g:go_fmt_command = "goimports"
+" let g:go_highlight_types = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_metalinter_enabled = ['vet', 'errcheck']
+let g:go_metalinter_autosave_enabled = ['vet', 'errcheck']
+let g:go_auto_type_info = 1
+
+" Go snippets
+map <Leader>ierr iif err != nil {<CR><CR>}<C-c>ki<Tab>return <Esc>
+map <Leader>fpl ifmt.Println()<Esc>h<Esc>
+map <Leader>fpf ifmt.Printf("")<Esc>hh<Esc>
+map <Leader>fsf ifmt.Sprintf("")<Esc>hh<Esc>
 
 " CtrlSF
 nmap <Leader>sf <Plug>CtrlSFPrompt
@@ -174,31 +206,24 @@ vmap <Leader>sf <Plug>CtrlSFVwordPath
 nnoremap <Leader>st :CtrlSFToggle<CR>
 
 " EasyMotion
-map <Leader> <Plug>(easymotion-prefix)
+let g:EasyMotion_do_mapping = 0
 nmap <Leader>f <Plug>(easymotion-overwin-f)
 nmap <Leader>w <Plug>(easymotion-overwin-w)
 nmap <Leader>l <Plug>(easymotion-overwin-line)
-
-" CtrlP ignored dirs and extensions
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.log,*/node_modules/*,*/deps/*
 
 map <F4> <Plug>(xmpfilter-mark)
 map <F5> <Plug>(xmpfilter-run)
 
 " Place text under cursor to search and replace
-nnoremap <Leader>sr :.,$s/<C-r><C-w>/
-vnoremap <Leader>sr :.,$s/<C-r><C-w>/
+nnoremap <Leader>sr :%s/<C-r><C-w>/
 
-let g:incsearch#auto_nohlsearch = 1
+let g:incsearch#auto_nohlsearch = 0
 map n  <Plug>(incsearch-nohl-n)
 map N  <Plug>(incsearch-nohl-N)
 map *  <Plug>(incsearch-nohl-*)
 map #  <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
-
-" Move to next `def` method
-nnoremap <Leader>m /def<CR><bar>z.
 
 " Duplicate line in the normal and selected block in the visual
 nnoremap <Leader>d :t.<CR>
@@ -210,13 +235,6 @@ nnoremap <Leader>b ^
 vnoremap <Leader>e $h
 vnoremap <Leader>b ^
 
-" Puts binding.pry
-nnoremap <Leader>pry Obinding.pry<ESC>
-
-" Search word under cursor in Dash
-nnoremap <Leader>g :Dash!<CR>
-vnoremap <Leader>g :Dash!<CR>
-
 " Move lines and blocks up and down
 nnoremap <C-j> :m .+1<CR>==
 nnoremap <C-k> :m .-2<CR>==
@@ -224,12 +242,6 @@ inoremap <C-j> <Esc>:m .+1<CR>==gi
 inoremap <C-k> <Esc>:m .-2<CR>==gi
 vnoremap <C-k> :m '<-2<CR>gv=gv
 vnoremap <C-j> :m '>+1<CR>gv=gv
-
-" Show current file in NERDTree
-nnoremap <Leader>n :NERDTreeFind<CR>
-
-nnoremap <S-k> Hz.
-nnoremap <S-j> Lz.
 
 nnoremap <esc> :noh<return><esc>
 
@@ -242,3 +254,11 @@ nnoremap c "_c
 vnoremap c "_c
 nnoremap C "_C
 vnoremap C "_C
+
+" Keep register after paste
+xnoremap p pgvy
+xnoremap P pgvy
+
+" Delve
+nnoremap <Leader>gt :GoToggleBreakpoint<CR>
+nnoremap <Leader>gd :GoDebug<CR>
