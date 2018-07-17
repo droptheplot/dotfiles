@@ -1,0 +1,26 @@
+{
+  "settingsVersion": "1.63.3",
+  "exclusionRules": [
+    {
+      "pattern": "https?://mail.google.com/*",
+      "passKeys": ""
+    }
+  ],
+  "filterLinkHints": false,
+  "waitForEnterForFilteredHints": true,
+  "hideHud": false,
+  "keyMappings": "unmapAll\nmap j scrollDown\nmap о scrollDown\nmap k scrollUp\nmap л scrollUp\nmap <c-d> scrollPageDown\nmap <c-в> scrollPageDown\nmap <c-u> scrollPageUp\nmap <c-г> scrollPageUp\nmap h goBack\nmap р goBack\nmap l goForward\nmap д goForward\nmap <space>w LinkHints.activateMode\nmap <space>ц LinkHints.activateMode\nmap <space>W LinkHints.activateModeToOpenInNewForegroundTab\nmap <space>Ц LinkHints.activateModeToOpenInNewForegroundTab\nmap gg scrollToTop\nmap gg scrollToTop\nmap G scrollToBottom\nmap П scrollToBottom\nmap <space>p togglePinTab\nmap <space>з togglePinTab",
+  "linkHintCharacters": "sadfjklewcmpgh",
+  "linkHintNumbers": "0123456789",
+  "newTabUrl": "about:newtab",
+  "nextPatterns": "next,more,newer,>,›,→,»,≫,>>",
+  "previousPatterns": "prev,previous,back,older,<,‹,←,«,≪,<<",
+  "regexFindMode": false,
+  "ignoreKeyboardLayout": false,
+  "scrollStepSize": 60,
+  "smoothScroll": true,
+  "grabBackFocus": true,
+  "searchEngines": "",
+  "searchUrl": "https://www.google.com/search?q=",
+  "userDefinedLinkHintCss": "div > .vimiumHintMarker {\n/* linkhint boxes */\nbackground: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF785),\n  color-stop(100%,#FFC542));\nborder: 1px solid #E3BE23;\n}\n\ndiv > .vimiumHintMarker span {\n/* linkhint text */\ncolor: black;\nfont-weight: bold;\nfont-size: 12px;\n}\n\ndiv > .vimiumHintMarker > .matchingCharacter {\n}"
+}
