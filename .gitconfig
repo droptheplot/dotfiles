@@ -9,6 +9,7 @@
   lumberjack = "!f(){\
     git branch | grep -v "master" | grep -v ^* | xargs git branch -D;\
   }; f"
+  root = !pwd
 [core]
   excludesfile = ~/.gitignore_global
   editor = vim
