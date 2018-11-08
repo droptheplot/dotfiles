@@ -14,6 +14,7 @@
   excludesfile = ~/.gitignore_global
   editor = vim
   pager = diff-so-fancy | less --tabs=4 -RFX
+  ignorecase = false
 [user]
   name = name
   email = email
@@ -21,5 +22,7 @@
   default = current
 [rerere]
   enabled = true
-[commit]
-  gpgsign = true
+[tig "color"]
+  cursor = black white default
+  title-focus = black white dim
+  title-blur = white black default
