@@ -15,7 +15,7 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (evil-visual-mark-mode evil-leader rainbow-delimiters powerline atom-dark-theme atom-one-dark-theme dracula-theme)))
+    (neotree evil-visual-mark-mode evil-leader rainbow-delimiters powerline atom-dark-theme atom-one-dark-theme dracula-theme)))
  '(scroll-bar-mode nil)
  '(tooltip-mode nil))
 (package-initialize)
@@ -30,6 +30,7 @@
 (require 'evil-leader)
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
+
 (evil-leader/set-key "d" "yyp")
 (evil-leader/set-key "w w" 'other-window)
 
@@ -49,6 +50,10 @@
 
 (global-display-line-numbers-mode)
 
+(require 'neotree)
+(setq neo-theme 'nerd)
+(evil-leader/set-key "n" 'neotree-toggle)
+
 (defun move-line-up ()
   "Move up the current line."
   (interactive)
@@ -66,3 +71,9 @@
 
 (global-set-key [(control j)] 'move-line-down)
 (global-set-key [(control k)] 'move-line-up)
+
+(custom-set-faces
+ '(neo-banner-face ((t (:foreground "#6272a4"))))
+ '(neo-root-dir-face ((t (:foreground "#8be9fd"))))
+ '(neo-dir-link-face ((t (:foreground "#8be9fd"))))
+ '(neo-file-link-face ((t (:foreground "#6272a4")))))
