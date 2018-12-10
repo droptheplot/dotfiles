@@ -15,7 +15,7 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (ace-jump-mode evil-escape neotree evil-visual-mark-mode evil-leader rainbow-delimiters powerline atom-dark-theme atom-one-dark-theme dracula-theme)))
+    (which-key ace-jump-mode evil-escape neotree evil-visual-mark-mode evil-leader rainbow-delimiters powerline atom-dark-theme atom-one-dark-theme dracula-theme)))
  '(scroll-bar-mode nil)
  '(tooltip-mode nil))
 (package-initialize)
@@ -38,11 +38,13 @@
 (evil-leader/set-key "c c" 'comment-line)
 (evil-leader/set-key "e" "$")
 (evil-leader/set-key "b" "^")
+(evil-leader/set-key "f f" 'find-file)
+(evil-leader/set-key "f l" 'load-file)
 
 (require 'evil-escape)
 (evil-escape-mode)
 (global-set-key "\C-c" nil)
-(global-set-key (kbd "C-c") 'evil-escape)
+(global-set-key (kbd "\C-c") 'evil-escape)
 
 (require 'evil)
 (evil-mode 1)
@@ -56,11 +58,16 @@
 
 (require 'neotree)
 (setq neo-theme 'ascii)
-(evil-leader/set-key "n" 'neotree-toggle)
+(setq neo-show-hidden-files t)
+(evil-leader/set-key "n n" 'neotree-toggle)
+(evil-leader/set-key "n f" 'neotree-find)
 
 (require 'ace-jump-mode)
 (autoload 'ace-jump-mode "ace-jump-mode" t)
 (evil-leader/set-key "w" 'ace-jump-mode)
+
+(require 'which-key)
+(which-key-mode)
  
 (load-theme 'dracula)
 
@@ -86,5 +93,5 @@
   (forward-line -1)
   (indent-according-to-mode))
 
-(global-set-key (kbd "C-k") 'move-line-up)
-(global-set-key (kbd "C-j") 'move-line-down)
+(global-set-key (kbd "\C-k") 'move-line-up)
+(global-set-key (kbd "\C-j") 'move-line-down)
