@@ -15,7 +15,7 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (neotree evil-visual-mark-mode evil-leader rainbow-delimiters powerline atom-dark-theme atom-one-dark-theme dracula-theme)))
+    (evil-escape neotree evil-visual-mark-mode evil-leader rainbow-delimiters powerline atom-dark-theme atom-one-dark-theme dracula-theme)))
  '(scroll-bar-mode nil)
  '(tooltip-mode nil))
 (package-initialize)
@@ -25,23 +25,36 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:weight normal :height 130 :width normal :family "Fira Code")))))
+ '(default ((t (:weight normal :height 130 :family "Fira Code"))))
+ '(neo-banner-face ((t (:foreground "#6272a4" :weight normal :height 130 :family "Fira Code"))))
+ '(neo-dir-link-face ((t (:foreground "#8be9fd" :weight normal :height 130 :family "Fira Code"))))
+ '(neo-file-link-face ((t (:foreground "#6272a4" :weight normal :height 130 :family "Fira Code"))))
+ '(neo-root-dir-face ((t (:foreground "#8be9fd" :weight normal :height 130 :family "Fira Code")))))
 
 (require 'evil-leader)
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
-
 (evil-leader/set-key "d" "yyp")
 (evil-leader/set-key "w w" 'other-window)
 
+(require 'evil-escape)
+(evil-escape-mode)
+(global-set-key "\C-c" nil)
+(global-set-key (kbd "C-c") 'evil-escape)
+
 (require 'evil)
 (evil-mode 1)
+(setq-default evil-kill-on-visual-paste nil)
 
 (require 'powerline)
 (powerline-default-theme)
 
 (require 'rainbow-delimiters)
 (rainbow-delimiters-mode)
+
+(require 'neotree)
+(setq neo-theme 'ascii)
+(evil-leader/set-key "n" 'neotree-toggle)
 
 (load-theme 'dracula)
 
@@ -50,9 +63,7 @@
 
 (global-display-line-numbers-mode)
 
-(require 'neotree)
-(setq neo-theme 'nerd)
-(evil-leader/set-key "n" 'neotree-toggle)
+(setq-default line-spacing 3)
 
 (defun move-line-up ()
   "Move up the current line."
@@ -69,11 +80,5 @@
   (forward-line -1)
   (indent-according-to-mode))
 
-(global-set-key [(control j)] 'move-line-down)
-(global-set-key [(control k)] 'move-line-up)
-
-(custom-set-faces
- '(neo-banner-face ((t (:foreground "#6272a4"))))
- '(neo-root-dir-face ((t (:foreground "#8be9fd"))))
- '(neo-dir-link-face ((t (:foreground "#8be9fd"))))
- '(neo-file-link-face ((t (:foreground "#6272a4")))))
+(global-set-key (kbd "C-k") 'move-line-up)
+(global-set-key (kbd "C-j") 'move-line-down)
