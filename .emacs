@@ -15,7 +15,7 @@
      ("melpa-stable" . "http://stable.melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (evil-escape neotree evil-visual-mark-mode evil-leader rainbow-delimiters powerline atom-dark-theme atom-one-dark-theme dracula-theme)))
+    (ace-jump-mode evil-escape neotree evil-visual-mark-mode evil-leader rainbow-delimiters powerline atom-dark-theme atom-one-dark-theme dracula-theme)))
  '(scroll-bar-mode nil)
  '(tooltip-mode nil))
 (package-initialize)
@@ -35,7 +35,9 @@
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key "d" "yyp")
-(evil-leader/set-key "w w" 'other-window)
+(evil-leader/set-key "c c" 'comment-line)
+(evil-leader/set-key "e" "$")
+(evil-leader/set-key "b" "^")
 
 (require 'evil-escape)
 (evil-escape-mode)
@@ -56,6 +58,10 @@
 (setq neo-theme 'ascii)
 (evil-leader/set-key "n" 'neotree-toggle)
 
+(require 'ace-jump-mode)
+(autoload 'ace-jump-mode "ace-jump-mode" t)
+(evil-leader/set-key "w" 'ace-jump-mode)
+ 
 (load-theme 'dracula)
 
 (toggle-scroll-bar -1)
