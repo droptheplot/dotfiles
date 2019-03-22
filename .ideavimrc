@@ -1,0 +1,37 @@
+set clipboard+=unnamed
+
+" Duplicate line in the normal and selected block in the visual
+nnoremap <Space>d :t.<CR>
+vnoremap <Space>d :t'><CR>
+
+" Go to beginning/end of line
+nnoremap <Space>e $
+nnoremap <Space>b ^
+vnoremap <Space>e $h
+vnoremap <Space>b ^
+
+" Move lines and blocks up and down
+nnoremap <C-j> :m .+1<CR>==
+nnoremap <C-k> :m .-2<CR>==
+inoremap <C-j> <Esc>:m .+1<CR>==gi
+inoremap <C-k> <Esc>:m .-2<CR>==gi
+vnoremap <C-k> :m '<-2<CR>gv=gv
+vnoremap <C-j> :m '>+1<CR>gv=gv
+
+" Keep register after paste
+vnoremap p pgvy
+vnoremap P pgvy
+
+nnoremap <Space>cc :action CommentByLineComment<CR>
+vnoremap <Space>cc :action CommentByLineComment<CR>
+inoremap <Space>cc :action CommentByLineComment<CR>
+nnoremap <Space>cr :action RefactoringMenu<CR>
+nnoremap <Space>cl :action ShowIntentionActions<CR>
+nnoremap <Space>ci :action OptimizeImports<CR>
+nnoremap <Space>ct :action ActivateTerminalToolWindow<CR>
+nnoremap <Space>cg :action GoToMenu<CR>
+
+nnoremap <Space>rr :action Run<CR>
+nnoremap <Space>ra :action RunAnything<CR>
+
+nnoremap <Space>gd :action Compare.SameVersion<CR>
