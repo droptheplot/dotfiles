@@ -28,10 +28,15 @@ inoremap <Space>cc :action CommentByLineComment<CR>
 nnoremap <Space>cr :action RefactoringMenu<CR>
 nnoremap <Space>cl :action ShowIntentionActions<CR>
 nnoremap <Space>ci :action OptimizeImports<CR>
-nnoremap <Space>ct :action ActivateTerminalToolWindow<CR>
-nnoremap <Space>cg :action GoToMenu<CR>
+
+nnoremap <Space>wg :action GoToMenu<CR>
+nnoremap <Space>wn :action SelectInProjectView<CR>
+nnoremap <Space>wt :action ActivateTerminalToolWindow<CR>
 
 nnoremap <Space>rr :action Run<CR>
 nnoremap <Space>ra :action RunAnything<CR>
 
 nnoremap <Space>gd :action Compare.SameVersion<CR>
+nnoremap <Space>ga :action Annotate<CR>
+
+nnoremap <Space>ti :action Scala.TypeInfo<CR>
