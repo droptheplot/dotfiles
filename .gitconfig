@@ -23,6 +23,6 @@
 [rerere]
   enabled = true
 [tig "color"]
-  cursor = black white default
+  cursor = black white dim
   title-focus = black white dim
-  title-blur = white black default
+  title-blur = white black dim
