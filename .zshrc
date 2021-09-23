@@ -98,6 +98,13 @@ source /usr/local/share/zsh-history-substring-search/zsh-history-substring-searc
 export CLICOLOR=1
 export LANG=C
 export TERM=xterm-256color
-export GOPATH="${HOME}/Projects/Go"
+
+export GOPATH="${HOME}/Go"
+
 export PATH="$PATH:$HOME/.rvm/bin"
 export PATH="$PATH:$GOPATH/bin"
+export PATH="$PATH:/Users/sernovikov/Library/Application Support/Coursier/bin"
+
+export JAVA_HOME=$(/usr/libexec/java_home -v 1.8.0)
+
+RPROMPT="%w %@"
