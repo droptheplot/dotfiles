@@ -1,8 +1,8 @@
 set clipboard+=unnamed
 
 " Duplicate line in the normal and selected block in the visual
-nnoremap <Space>d :t.<CR>
-vnoremap <Space>d :t'><CR>
+nnoremap <Space>d :action EditorDuplicateLines<CR>
+vnoremap <Space>d :action EditorDuplicateLines<CR>
 
 " Go to beginning/end of line
 nnoremap <Space>e $
@@ -11,32 +11,44 @@ vnoremap <Space>e $h
 vnoremap <Space>b ^
 
 " Move lines and blocks up and down
-nnoremap <C-j> :m .+1<CR>==
-nnoremap <C-k> :m .-2<CR>==
-inoremap <C-j> <Esc>:m .+1<CR>==gi
-inoremap <C-k> <Esc>:m .-2<CR>==gi
-vnoremap <C-k> :m '<-2<CR>gv=gv
-vnoremap <C-j> :m '>+1<CR>gv=gv
+nnoremap <C-k> :action MoveLineUp<CR>
+nnoremap <C-j> :action MoveLineDown<CR>
+vnoremap <C-K> :action MoveLineUp<CR>
+vnoremap <C-J> :action MoveLineDown<CR>
 
 " Keep register after paste
-vnoremap p pgvy
-vnoremap P pgvy
+vnoremap p :action EditorPaste<CR>
+vnoremap P :action EditorPaste<CR>
 
 nnoremap <Space>cc :action CommentByLineComment<CR>
 vnoremap <Space>cc :action CommentByLineComment<CR>
-inoremap <Space>cc :action CommentByLineComment<CR>
-nnoremap <Space>cr :action RefactoringMenu<CR>
-nnoremap <Space>cl :action ShowIntentionActions<CR>
-nnoremap <Space>ci :action OptimizeImports<CR>
-
-nnoremap <Space>wg :action GoToMenu<CR>
-nnoremap <Space>wn :action SelectInProjectView<CR>
-nnoremap <Space>wt :action ActivateTerminalToolWindow<CR>
+nnoremap <Space>rm :action RefactoringMenu<CR>
+nnoremap <Space>sa :action ShowIntentionActions<CR>
+nnoremap <Space>oi :action OptimizeImports<CR>
 
 nnoremap <Space>rr :action Run<CR>
 nnoremap <Space>ra :action RunAnything<CR>
+nnoremap <Space>rd :action Debug<CR>
 
-nnoremap <Space>gd :action Compare.SameVersion<CR>
-nnoremap <Space>ga :action Annotate<CR>
+nnoremap <Space>an :action Annotate<CR>
 
 nnoremap <Space>ti :action Scala.TypeInfo<CR>
+nnoremap <Space>spv :action SelectInProjectView<CR>
+nnoremap <Space>jd :action QuickJavaDoc<CR>
+
+nnoremap <Space>fp :action FindInPath<CR>
+
+nnoremap <Space>fu :action FindUsages<CR>
+nnoremap <Space>re :action RenameElement<CR>
+
+nnoremap <Space>fmt :action ScalaFmtFormat<CR>
+nnoremap <Space>gt :action GotoTest<CR>
+nnoremap <Space>gi :action GotoImplementation<CR>
+nnoremap <Space>si :action Scala.ShowImplicits<CR>
+
+nnoremap <Space>rl :action Vcs.RollbackChangedLines<CR>
+
+nnoremap <Space>hw :action HideActiveWindow<CR>
+
+nnoremap <Space>gh :action Github.Open.In.Browser<CR>
+nnoremap <Space>gh :action Arcanum.File.Browse<CR>
