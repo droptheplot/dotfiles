@@ -1,5 +1,10 @@
 set clipboard+=unnamed
 
+map <Space><Space>s <Plug>(easymotion-bd-w)
+map <Space><Space>S <Plug>(easymotion-bd-W)
+
+set easymotion
+
 " Duplicate line in the normal and selected block in the visual
 nnoremap <Space>d :action EditorDuplicateLines<CR>
 vnoremap <Space>d :action EditorDuplicateLines<CR>
